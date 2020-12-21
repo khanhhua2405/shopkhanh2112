@@ -1,0 +1,62 @@
+////---Create payment user
+router.post('/payment', paymentPage);
+router.get('/payment', paymentPage);
+function paymentPage(req, res) {
+
+    console.log(
+      req.query,
+      req.params,
+      req.body
+    );
+
+    var dataU = {
+      _id : new mongoose.Types.ObjectId(),
+      name : "",
+      email : "",
+      address: "",
+      city: "",
+      state: "",
+      zip: "",
+      namecard: "",
+      creditcardnum: "",
+      expmonth: "",
+      expyear: "",
+      cvv: ""
+    };
+
+    if (req.query.name != undefined && req.query.name != null) {
+      dataU.name = req.query.name;
+    }
+  
+    if (req.query.email != undefined && req.query.email != null) {
+      dataU.email = req.query.email;
+    }
+	 if (req.query.address != undefined && req.query.address != null) {
+      dataU.address = req.query.address;
+    }
+  
+    if ( dataU.name != "") {
+      mongoose.connect( dbconfig.urldb, {useNewUrlParser: true, useUnifiedTopology: true} ,
+        function(err) {
+          if (err) throw err;
+      
+          var User = mongoose.model("User", UserSchema, "user");
+      
+          var newU = new User(dataU);
+
+          newU.save(
+      
+            function (err) {
+              if (err) throw err;
+              console.log("\n\t --- create new payment ! ", dataU);
+            }
+        
+          );
+        }
+      );
+    }
+  res.render('payment-create');
+}
+module.exports = router;
+
+  
